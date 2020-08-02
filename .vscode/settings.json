@@ -3,6 +3,8 @@
         "cstdio": "cpp",
         "cmath": "cpp",
         "iostream": "cpp",
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "ostream": "cpp",
+        "set": "cpp"
     }
 }
