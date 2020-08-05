@@ -55,8 +55,8 @@ void deal(int k)
 int main()
 {
     ios::sync_with_stdio(false);
-    // freopen("in.txt", "r", stdin);
-    // freopen("out.txt", "w", stdout);
+    freopen("in.txt", "r", stdin);
+    freopen("out.txt", "w", stdout);
     cin >> n >> m;
     for (int i = 0; i < n; i++)
     {
