@@ -1,12 +1,13 @@
+#include <iostream>
 #include <cstdio>
 #include <cstring>
 
 using namespace std;
-const int maxn = 2010;
 
+int n;
 struct bign
 {
-    int d[maxn << 1], len; //空间应大一倍，因为乘之后的结果位数会增加
+    int d[3000], len;
     bign() : len(0) { memset(d, 0, sizeof(d)); }
 };
 
@@ -20,7 +21,7 @@ bign change(char str[])
     return a;
 }
 
-//高精度乘法，其中一个为int
+//高精度乘法
 bign mul(bign a, int b)
 {
     bign c;
@@ -39,25 +40,6 @@ bign mul(bign a, int b)
     return c;
 }
 
-//两个bign进行相乘，高精度
-bign mul(bign a, bign b)
-{
-    bign c;
-    for (int i = 0; i < a.len; i++)
-        for (int j = 0; j < b.len; j++)
-            c.d[i + j] += a.d[i] * b.d[j];
-    for (int i = 0; i < a.len + b.len; i++)
-        if (c.d[i] > 9)
-        {
-            c.d[i + 1] += c.d[i] / 10;
-            c.d[i] %= 10;
-        }
-    c.len = a.len + b.len;
-    while (c.len >= 2 && c.d[c.len - 1] == 0)
-        c.len--;
-    return c;
-}
-
 //输出bign
 void print(bign a)
 {
@@ -68,10 +50,25 @@ void print(bign a)
 
 int main()
 {
-    char a[maxn], b[maxn];
     freopen("in.txt", "r", stdin);
-    scanf("%s%s", a, b);
-    print(mul(change(a), change(b)));
-    printf("\n");
+    int t, a;
+    cin >> t;
+    while (t--)
+    {
+        cin >> n >> a;
+        bign fact;
+        fact.len = 1;
+        fact.d[0] = 1;
+        for (int i = 1; i <= n; i++)
+        {
+            fact = mul(fact, i);
+        }
+        int ans = 0;
+        for (int i = 0; i < fact.len; i++)
+            if (fact.d[i] == a)
+                ans++;
+        printf("%d\n", ans);
+    }
+
     return 0;
 }
