@@ -1,4 +1,4 @@
-// 时间复杂度为O(nm^2)，一般能处理10^3-10^4规模的网络
+// 时间复杂度为O(n^2m)，一般能处理10^4-10^5规模的网络
 #include <iostream>
 #include <cstring>
 #include <queue>
@@ -10,8 +10,7 @@ const int inf = 0x3f3f3f3f;
 const int maxn = 205;
 const int maxm = 5005;
 
-int n, m, s, e, u, v, edge_total = 1, flag[maxn][maxn], head[maxn], pre[maxn];
-bool vis[maxn];
+int n, m, s, e, u, v, edge_total = 1, cur[maxn], head[maxn];
 ll w, ans, d[maxn];
 struct EK
 {
@@ -33,43 +32,52 @@ void add_edge(int u, int v, ll w)
 
 bool bfs()
 {
-    memset(vis, 0, sizeof(vis));
+    fill(d, d + maxn, inf);
     queue<int> q;
     q.push(s);
-    vis[s] = true;
-    d[s] = inf; //d存储节点最大流量
+    d[s] = 0;         //d表示该节点位于的层级
+    cur[s] = head[s]; //初始化当前弧
     while (!q.empty())
     {
         int now = q.front();
         q.pop();
         for (int i = head[now]; i; i = edge[i].next)
         {
-            if (edge[i].w == 0)
-                continue; //流量为0，忽略
             int v = edge[i].to;
-            if (vis[v])
-                continue;
-            q.push(v), vis[v] = true;
-            d[v] = min(d[now], edge[i].w); //更新节点流量
-            pre[v] = i;                    //记录节点前驱在所在边的存储位置
-            if (v == e)                    //找到了一条增广路径
-                return true;
+            if (edge[i].w > 0 && d[v] == inf) //当前节点剩余容量>0且未访问过
+            {
+                q.push(v);
+                cur[v] = head[v];  //初始化当前弧
+                d[v] = d[now] + 1; //设置节点层级
+                if (v == e)        //找到了一条增广路径
+                    return 1;
+            }
         }
     }
     return 0;
 }
 
-void update() //更新边权
+int dfs(int x, ll sum)
 {
-    int x = e, v;
-    while (x != s)
+    if (x == e) //抵达汇点
+        return sum;
+    ll k, res = 0; //k为当前最小的剩余容量
+    for (int i = cur[x]; i && sum; i = edge[i].next)
     {
-        v = pre[x];
-        edge[v].w -= d[e];
-        edge[v ^ 1].w += d[e];
-        x = edge[v ^ 1].to;
+        cur[x] = i; //当前弧优化
+        int v = edge[i].to;
+        if (edge[i].w > 0 && (d[v] == d[x] + 1)) //找到下一层级的节点
+        {
+            k = dfs(v, min(sum, edge[i].w));
+            if (k == 0)
+                d[v] = inf; //剪枝，去掉增广完毕的点
+            edge[i].w -= k; //回溯时更新节点容量
+            edge[i ^ 1].w += k;
+            res += k; //经过该点的流量和
+            sum -= k; //该点的剩余流量
+        }
     }
-    ans += d[e]; //累加每一条增广路径的最小流量值
+    return res;
 }
 
 int main()
@@ -80,17 +88,11 @@ int main()
     for (int i = 0; i < m; i++)
     {
         cin >> u >> v >> w;
-        if (flag[u][v] == 0)
-        {
-            add_edge(u, v, w);
-            flag[u][v] = edge_total;
-        }
-        else
-            edge[flag[u][v] - 1].w += w;
+        add_edge(u, v, w);
     }
     while (bfs())
     {
-        update();
+        ans += dfs(s, inf);
     }
     cout << ans << endl;
     return 0;

@@ -35,24 +35,24 @@ int main()
 {
     int x, y;
     freopen("in.txt", "r", stdin);
-    while (scanf("%d", &k) && k)
+    // while (scanf("%d", &k) && k)
+    // {
+    scanf("%d%d%d", &m, &n, &k);
+    memset(line, 0, sizeof(line));
+    memset(girl, 0, sizeof(girl));
+    for (int i = 0; i < k; i++)
     {
-        scanf("%d %d", &m, &n);
-        memset(line, 0, sizeof(line));
-        memset(girl, 0, sizeof(girl));
-        for (int i = 0; i < k; i++)
-        {
-            scanf("%d %d", &x, &y);
-            line[x][y] = 1;
-        }
-        int sum = 0;
-        for (int i = 1; i <= m; i++)
-        {
-            memset(used, 0, sizeof(used));
-            if (found(i))
-                sum++;
-        }
-        printf("%d\n", sum);
+        scanf("%d %d", &x, &y);
+        line[x][y] = 1;
     }
+    int sum = 0;
+    for (int i = 1; i <= m; i++)
+    {
+        memset(used, 0, sizeof(used));
+        if (found(i))
+            sum++;
+    }
+    printf("%d\n", sum);
+    // }
     return 0;
 }
