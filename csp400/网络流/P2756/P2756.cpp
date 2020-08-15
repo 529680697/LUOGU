@@ -1,24 +1,24 @@
-// 时间复杂度为O(n^2m)，一般能处理10^4-10^5规模的网络
 #include <iostream>
 #include <cstring>
 #include <queue>
 #include <algorithm>
 
 using namespace std;
-typedef long long ll;
+
 const int inf = 0x3f3f3f3f;
 const int maxn = 205;
 const int maxm = 5005;
 
-int n, m, s, e, u, v, edge_total = 1, cur[maxn], head[maxn];
-ll w, ans, d[maxn];
+int n, m, s, e, u, v, edge_total = 1, cur[maxn], head[maxn], connect[maxn];
+int w, ans, d[maxn];
+bool vis[maxn][maxn];
 struct EK
 {
     int to, next;  //to为该边指向的节点，next为该边的下一条邻接边，即从u出发的另一条边
-    ll w;          //该边的容量
+    int w;         //该边的容量
 } edge[maxm << 1]; //奇数代表正向边，偶数为反向边
 
-void add_edge(int u, int v, ll w)
+void add_edge(int u, int v, int w)
 {
     edge[++edge_total].to = v;
     edge[edge_total].w = w;
@@ -57,11 +57,11 @@ bool bfs()
     return 0;
 }
 
-int dfs(int x, ll sum)
+int dfs(int x, int sum)
 {
     if (x == e) //抵达汇点
         return sum;
-    ll k, res = 0; //k为当前最小的剩余容量
+    int k, res = 0; //k为当前最小的剩余容量
     for (int i = cur[x]; i && sum; i = edge[i].next)
     {
         cur[x] = i; //当前弧优化
@@ -82,22 +82,32 @@ int dfs(int x, ll sum)
 
 int main()
 {
-    ios::sync_with_stdio(false);
+    int a, b;
     freopen("in.txt", "r", stdin);
-    cin >> n >> m >> s >> e;
-    for (int i = 0; i < m; i++)
+    ios::sync_with_stdio(false);
+    cin >> m >> n;
+    s = 0, e = n + 1;
+    for (int i = 1; i <= m; i++) //源点到外籍飞行员
+        add_edge(0, i, 1);
+    cin >> a >> b;
+    while (a != -1 || b != -1) //外籍飞行员到英国飞行员
     {
-        cin >> u >> v >> w;
-        add_edge(u, v, w);
+        if (!vis[a][b])
+        {
+            add_edge(a, b, 1);
+            vis[a][b] = true;
+        }
+        cin >> a >> b;
     }
+    for (int i = m + 1; i <= n; i++) //英国飞行员到汇点
+        add_edge(i, n + 1, 1);
+    int ans = 0;
     while (bfs())
-    {
-        ans += dfs(s, inf);
-    }
+        ans += dfs(0, inf);
     cout << ans << endl;
     //查找可行路径
-    // for (int i = 2; i < edge_total; i += 2)
-    //     if (edge[i].to <= n && edge[i].to > m && edge[i].w == 0)
-    //         cout << edge[i ^ 1].to << " " << edge[i].to << endl;
+    for (int i = 2; i < edge_total; i += 2)
+        if (edge[i].to <= n && edge[i].to > m && edge[i].w == 0)
+            cout << edge[i ^ 1].to << " " << edge[i].to << endl;
     return 0;
 }
