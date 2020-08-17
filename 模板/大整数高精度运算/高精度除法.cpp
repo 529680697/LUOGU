@@ -3,6 +3,35 @@
 #include <algorithm>
 using namespace std;
 #define n 10
+const int maxn = 200;
+
+struct bign
+{
+    int d[maxn << 1], len; //空间应大一倍，因为乘之后的结果位数会增加
+    bign() : len(0) { memset(d, 0, sizeof(d)); }
+};
+
+//高精度除法，其中一个为int
+bign div(bign a, int b, int &r)
+{
+    bign c;
+    c.len = a.len;
+    for (int i = a.len - 1; i >= 0; i--)
+    {
+        r = r * 10 + a.d[i];
+        if (r < b)
+            c.d[i] = 0;
+        else
+        {
+            c.d[i] = r / b;
+            r %= b;
+        }
+    }
+    while (c.len >= 2 && c.d[c.len - 1] == 0)
+        c.len--;
+    return c;
+}
+
 string dezero(string a) //用来去掉正数前面的0，也就是说可以输入000001类似这样的数字
 {
     long int i;
