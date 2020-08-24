@@ -34,19 +34,19 @@ inline void init_x_line(int line)
     }
 }
 
-void delete_o_node(int line, int x, int y)
+void delete_o_node(int x, int y)
 {
     if (x < 0)
         return;
     if (f[x][y] == 'o')
     {
-        delete_o_node(line, x - 1, y - 1);
-        delete_o_node(line, x - 1, y + 1);
+        delete_o_node(x - 1, y - 1);
+        delete_o_node(x - 1, y + 1);
     }
     else if (f[x][y] == '\\')
-        delete_o_node(line, x - 1, y + 1);
+        delete_o_node(x - 1, y + 1);
     else if (f[x][y] == '/')
-        delete_o_node(line, x - 1, y - 1);
+        delete_o_node(x - 1, y - 1);
     f[x][y] = ' ';
 }
 
@@ -63,7 +63,7 @@ inline void delete_node(int line, int x, int y)
     else
         for (int i = _x + 1, j = _y - 1; i < line && f[i][j] != 'o'; i++, j--)
             f[i][j] = ' ';
-    delete_o_node(line, _x, _y);
+    delete_o_node(_x, _y);
     f[_x][_y] = ' ';
 }
 
