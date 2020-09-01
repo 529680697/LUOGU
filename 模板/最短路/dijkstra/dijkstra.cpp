@@ -3,7 +3,7 @@
 
 using namespace std;
 const int maxv = 60;
-const int inf = 0x3ffff;
+const int inf = 0x3f3f3f3f;
 
 int g[maxv][maxv];
 bool vis[maxv] = {false};
