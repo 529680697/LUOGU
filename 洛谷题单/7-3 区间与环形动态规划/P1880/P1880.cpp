@@ -22,9 +22,6 @@ int main()
         else
             sum[i] = sum[i - 1] + a[i];
     }
-
-    // for (int i = 0; i < n; i++)
-    //     dpmin[i][i] = dpmax[i][i] = a[i];
     for (int l = 2; l <= n; l++)
     {
         for (int i = 0; i < n; i++)
