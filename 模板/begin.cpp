@@ -12,7 +12,7 @@ int main()
 {
     freopen("in", "r", stdin);
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(NULL);
     cin >> n;
     return 0;
 }
