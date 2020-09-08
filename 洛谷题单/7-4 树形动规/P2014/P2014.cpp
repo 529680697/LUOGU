@@ -57,6 +57,7 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cin >> n >> m;
+    auto a = 1;
     for (int i = 1; i <= n; i++)
     {
         cin >> v >> wi[i];
