@@ -1,9 +1,10 @@
 #pragma GCC diagnostic error "-std=c++11"
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
 
 using namespace std;
 const int inf = 0x3f3f3f3f;

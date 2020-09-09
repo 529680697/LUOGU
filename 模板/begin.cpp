@@ -1,7 +1,8 @@
 #pragma GCC diagnostic error "-std=c++11"
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
+#include <bits/stdc++.h>
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
 
 using namespace std;
 const int inf = 0x3f3f3f3f;
