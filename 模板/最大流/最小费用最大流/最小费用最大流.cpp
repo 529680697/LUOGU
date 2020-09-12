@@ -17,7 +17,7 @@ struct EK
 {
     int to, next;  //to为该边指向的节点，next为该边的下一条邻接边，即从u出发的另一条边
     ll w, dis;     //该边的容量、花费
-} edge[maxm << 1]; //奇数代表正向边，偶数为反向边
+} edge[maxm << 1]; //偶数代表正向边，奇数为反向边
 
 void add_edge(int u, int v, ll w, ll dis)
 {
