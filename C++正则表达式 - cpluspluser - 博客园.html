@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)https://www.cnblogs.com/coolcpp/p/cpp-regex.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta property="og:description" content="若要判断一个输入的QQ号是否有效，你会如何处呢？ 首先你得分析一下其对应规则，依次列出： 1. 长度大于5，小于等于11； 2. 首位不能为0； 3. 是否为纯数字？ 规则既列，接着就该尝试实现了，那">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>C++正则表达式 - cpluspluser - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="https://common.cnblogs.com/favicon.svg" type="image/svg+xml">
+    
+    <link rel="stylesheet" href="./C++正则表达式 - cpluspluser - 博客园_files/blog-common.min.css">
+    <link id="MainCss" rel="stylesheet" href="./C++正则表达式 - cpluspluser - 博客园_files/bundle-blacklowkey.min.css">
+    <link type="text/css" rel="stylesheet" href="./C++正则表达式 - cpluspluser - 博客园_files/custom.css">
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./C++正则表达式 - cpluspluser - 博客园_files/bundle-blacklowkey-mobile.min.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/coolcpp/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/coolcpp/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/coolcpp/wlwmanifest.xml">
+    <script async="" src="./C++正则表达式 - cpluspluser - 博客园_files/analytics.js.下载"></script><script>
+        var currentBlogId = 445520;
+        var currentBlogApp = 'coolcpp';
+        var cb_enable_mathjax = true;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'BlackLowKey';
+        var visitorUserId = '';
+    </script><style type="text/css" abt="234"></style>
+        <script>
+            var currentPostDateAdded = '2019-03-28 05:01';
+        </script>
+    <script src="./C++正则表达式 - cpluspluser - 博客园_files/jquery-2.2.0.min.js.下载"></script>
+    <script src="./C++正则表达式 - cpluspluser - 博客园_files/blog-common.min.js.下载"></script>
+    <script type="text/x-mathjax-config;executed=true">
+        MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: {
+        equationNumbers: { autoNumber: ['AMS'], useLabelIds: true },
+        extensions: ['extpfeil.js', 'mediawiki-texvc.js'],
+        Macros: {bm: "\\boldsymbol"}
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script>
+    <script src="./C++正则表达式 - cpluspluser - 博客园_files/MathJax.js.下载"></script>
+    
+<script>//remove baidu search ad
+var _countAA = 0
+function doBBBd(){
+    var alla = document.getElementsByTagName('a')
+    for(var i = 0; i < alla.length; i++){
+        if(/baidu.com\/(baidu.php\?url=|adrc.php\?t)/.test(alla[i].href)){
+            var _temp = alla[i].parentElement, loop = 0
+            while(loop < 5){
+                _temp = _temp.parentElement
+                loop++
+                if(_temp.parentElement.id == 'content_left'){
+                    _temp.remove()
+                    break
+                }
+            }
+        }
+    }
+    
+    if(_countAA++ < 20){
+        setTimeout(doBBBd, 500)
+    }
+    
+}
+doBBBd()
+document.addEventListener('keyup', function(){_countAA-=10;doBBBd()}, false)
+document.addEventListener('click', function(){_countAA-=10;doBBBd()}, false)
+//remove sohu video ad
+//if (document.URL.indexOf("tv.sohu.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+//remove 56.com video ad
+//if (document.URL.indexOf("56.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+</script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div>
+    <a name="top"></a>
+    
+    
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+        <a id="lnkBlogLogo" href="https://www.cnblogs.com/coolcpp/"><img id="blogLogo" src="./C++正则表达式 - cpluspluser - 博客园_files/logo.gif" alt="返回主页"></a>		
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/coolcpp/">cpluspluser</a>
+</h1>
+<h2>
+
+</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/coolcpp/">
+首页</a>
+</li>
+<li>
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/cpluspluser">
+联系</a></li>
+<li>
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/coolcpp/rss/">
+订阅</a>
+<!--<partial name="./Shared/_XmlLink.cshtml" model="Model" /></li>--></li>
+<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+
+		<div class="blogStats">
+			
+			<span id="stats_post_count">随笔 - 
+33&nbsp; </span>
+<span id="stats_article_count">文章 - 
+0&nbsp; </span>
+<span id="stats-comment_count">评论 - 
+3</span>
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    <!--done-->
+    <div id="topics">
+        <div class="post">
+            <h1 class="postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html">
+    <span>C++正则表达式</span>
+    
+
+
+</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+    <p>若要判断一个输入的QQ号是否有效，你会如何处呢？</p>
+<p>首先你得分析一下其对应规则，依次列出：</p>
+<ol>
+<li>长度大于5，小于等于11；</li>
+<li>首位不能为0；</li>
+<li>是否为纯数字？</li>
+</ol>
+<p>规则既列，接着就该尝试实现了，那么用什么来表示字符串呢？在C++中，最容易想到的就是string了，其中提供了许多成员函数可以处理字符串，所以有了如下实现：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> qq;
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cin</span> &gt;&gt; qq;
+
+<span class="hljs-comment">// 1. 判断位数是否合法</span>
+<span class="hljs-keyword">if</span> (qq.length() &gt;= <span class="hljs-number">5</span> &amp;&amp; qq.length() &lt;= <span class="hljs-number">11</span>)
+{
+	<span class="hljs-comment">// 2. 判断是否非'0'开头</span>
+	<span class="hljs-keyword">if</span> (qq[<span class="hljs-number">0</span>] != <span class="hljs-string">'0'</span>)
+	{
+		<span class="hljs-comment">// 3. 判断是否为纯数字</span>
+		<span class="hljs-keyword">auto</span> pos = <span class="hljs-built_in">std</span>::find_if(qq.begin(), qq.end(), [](<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>&amp; ch) {
+			<span class="hljs-keyword">return</span> ch &lt; <span class="hljs-string">'0'</span> || ch &gt; <span class="hljs-string">'9'</span>;
+		});
+		<span class="hljs-keyword">if</span> (pos == qq.end())
+			<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"valid.\n"</span>;
+	}
+}
+</code></pre>
+<p>虽然写出来了，但是有没有感到异常繁琐？这还仅仅是一个对应规则较少的处理，便如此麻烦，若是要检测IP地址、身份证号，或是解析一段HTML数据，或是其它更复杂的字串，那岂非更令人叫苦不迭？</p>
+<p>当然，也有许多扩展库对字符串处理提供了方便，其中比较好用的是boost中的string_algo库（已于C++17纳入了标准库，并改名为string_view），但本篇主要说C++11的regex库，其对复杂数据的处理能力非常强，比如可以用它来检测QQ号：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">qq_reg</span><span class="hljs-params">(<span class="hljs-string">"[1-9]\\d{4,11}"</span>)</span></span>;
+<span class="hljs-keyword">bool</span> ret = <span class="hljs-built_in">std</span>::regex_match(qq, qq_reg);
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; (ret ? <span class="hljs-string">"valid"</span> : <span class="hljs-string">"invalid"</span>) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+</code></pre>
+<p>是不是超级方便呢？那么接下来便来看看如何使用「正则表达式」。</p>
+<h2 id="正则程序库（regex）">正则程序库（regex）</h2>
+<p>「正则表达式」就是一套表示规则的式子，专门用来处理各种复杂的操作。</p>
+<p>std::regex是C++用来表示「正则表达式」（regular expression）的库，于C++11加入，它是class std::basic_regex&lt;&gt;针对char类型的一个特化，还有一个针对wchar_t类型的特化为std::wregex。</p>
+<h2 id="正则文法（regex-syntaxes）">正则文法（regex syntaxes）</h2>
+<p>std::regex默认使用是ECMAScript文法，这种文法比较好用，且威力强大，常用符号的意义如下：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>匹配行的开头</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配行的结尾</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配任意单个字符</td>
+</tr>
+<tr>
+<td>[…]</td>
+<td>匹配[]中的任意一个字符</td>
+</tr>
+<tr>
+<td>(…)</td>
+<td>设定分组</td>
+</tr>
+<tr>
+<td>\</td>
+<td>转义字符</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配数字[0-9]</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>\d 取反</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配字母[a-z]，数字，下划线</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>\w 取反</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配空格</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>\s 取反</td>
+</tr>
+<tr>
+<td>+</td>
+<td>前面的元素重复1次或多次</td>
+</tr>
+<tr>
+<td>*</td>
+<td>前面的元素重复任意次</td>
+</tr>
+<tr>
+<td>?</td>
+<td>前面的元素重复0次或1次</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>前面的元素重复n次</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>前面的元素重复至少n次</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>前面的元素重复至少n次，至多m次</td>
+</tr>
+<tr>
+<td>|</td>
+<td>逻辑或</td>
+</tr>
+</tbody>
+</table>
+<p>上面列出的这些都是非常常用的符号，靠这些便足以解决绝大多数问题了。</p>
+<h2 id="匹配（match）">匹配（Match）</h2>
+<p>字符串处理常用的一个操作是「匹配」，即字符串和规则恰好对应，而用于匹配的函数为std::regex_match()，它是个函数模板，我们直接来看例子：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"&lt;.*&gt;.*&lt;/.*&gt;"</span>)</span></span>;
+<span class="hljs-keyword">bool</span> ret = <span class="hljs-built_in">std</span>::regex_match(<span class="hljs-string">"&lt;html&gt;value&lt;/html&gt;"</span>, reg);
+assert(ret);
+
+ret = <span class="hljs-built_in">std</span>::regex_match(<span class="hljs-string">"&lt;xml&gt;value&lt;xml&gt;"</span>, reg);
+assert(!ret);
+
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg1</span><span class="hljs-params">(<span class="hljs-string">"&lt;(.*)&gt;.*&lt;/\\1&gt;"</span>)</span></span>;
+ret = <span class="hljs-built_in">std</span>::regex_match(<span class="hljs-string">"&lt;xml&gt;value&lt;/xml&gt;"</span>, reg1);
+assert(ret);
+
+ret = <span class="hljs-built_in">std</span>::regex_match(<span class="hljs-string">"&lt;header&gt;value&lt;/header&gt;"</span>, <span class="hljs-built_in">std</span>::regex(<span class="hljs-string">"&lt;(.*)&gt;value&lt;/\\1&gt;"</span>));
+assert(ret);
+
+<span class="hljs-comment">// 使用basic文法</span>
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg2</span><span class="hljs-params">(<span class="hljs-string">"&lt;\\(.*\\)&gt;.*&lt;/\\1&gt;"</span>, <span class="hljs-built_in">std</span>::regex_constants::basic)</span></span>;
+ret = <span class="hljs-built_in">std</span>::regex_match(<span class="hljs-string">"&lt;title&gt;value&lt;/title&gt;"</span>, reg2);
+assert(ret);
+</code></pre>
+<p>这个小例子使用regex_match()来匹配xml格式（或是html格式）的字符串，匹配成功则会返回true，意思非常简单，若是不懂其中意思，可参照前面的文法部分。</p>
+<p>对于语句中出现\\，是因为\需要转义，C++11以后支持原生字符，所以也可以这样使用：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg1</span><span class="hljs-params">(<span class="hljs-string">R"(&lt;(.*)&gt;.*&lt;/\1&gt;)"</span>)</span></span>;
+<span class="hljs-keyword">auto</span> ret = <span class="hljs-built_in">std</span>::regex_match(<span class="hljs-string">"&lt;xml&gt;value&lt;/xml&gt;"</span>, reg1);
+assert(ret);
+</code></pre>
+<p>但C++03之前并不支持，所以使用时要需要留意。</p>
+<p>若是想得到匹配的结果，可以使用regex_match()的另一个重载形式：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::cmatch m;
+<span class="hljs-keyword">auto</span> ret = <span class="hljs-built_in">std</span>::regex_match(<span class="hljs-string">"&lt;xml&gt;value&lt;/xml&gt;"</span>, m, <span class="hljs-built_in">std</span>::regex(<span class="hljs-string">"&lt;(.*)&gt;(.*)&lt;/(\\1)&gt;"</span>));
+<span class="hljs-keyword">if</span> (ret)
+{
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m.str() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m.length() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m.position() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"----------------"</span> &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+
+<span class="hljs-comment">// 遍历匹配内容</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> i = <span class="hljs-number">0</span>; i &lt; m.size(); ++i)
+{
+	<span class="hljs-comment">// 两种方式都可以</span>
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m[i].str() &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; m.str(i) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"----------------"</span> &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+
+<span class="hljs-comment">// 使用迭代器遍历</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> pos = m.begin(); pos != m.end(); ++pos)
+{
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; *pos &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre>
+<p>输出结果为：</p>
+<pre><code class="language-cpp hljs">&lt;xml&gt;value&lt;/xml&gt;
+<span class="hljs-number">16</span>
+<span class="hljs-number">0</span>
+----------------
+&lt;xml&gt;value&lt;/xml&gt; &lt;xml&gt;value&lt;/xml&gt;
+xml xml
+value value
+xml xml
+----------------
+&lt;xml&gt;value&lt;/xml&gt;
+xml
+value
+xml
+</code></pre>
+<p>cmatch是class template std::match_result&lt;&gt;针对C字符的一个特化版本，若是string，便得用针对string的特化版本smatch。同时还支持其相应的宽字符版本wcmatch和wsmatch。</p>
+<p>在regex_match()的第二个参数传入match_result便可获取匹配的结果，在例子中便将结果储存到了cmatch中，而cmatch又提供了许多函数可以对这些结果进行操作，大多方法都和string的方法类似，所以使用起来比较容易。</p>
+<p>m[0]保存着匹配结果的所有字符，若想在匹配结果中保存有子串，则得在「正则表达式」中用()标出子串，所以这里多加了几个括号：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::regex(<span class="hljs-string">"&lt;(.*)&gt;(.*)&lt;/(\\1)&gt;"</span>)
+</code></pre>
+<p>这样这些子串就会依次保存在m[0]的后面，即可通过m[1],m[2],...依次访问到各个子串。</p>
+<h2 id="搜索（search）">搜索（Search）</h2>
+<p>「搜索」与「匹配」非常相像，其对应的函数为std::regex_search，也是个函数模板，用法和regex_match一样，不同之处在于「搜索」只要字符串中有目标出现就会返回，而非完全「匹配」。</p>
+<p>还是以例子来看：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"&lt;(.*)&gt;(.*)&lt;/(\\1)&gt;"</span>)</span></span>;
+<span class="hljs-built_in">std</span>::cmatch m;
+<span class="hljs-keyword">auto</span> ret = <span class="hljs-built_in">std</span>::regex_search(<span class="hljs-string">"123&lt;xml&gt;value&lt;/xml&gt;456"</span>, m, reg);
+<span class="hljs-keyword">if</span> (ret)
+{
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; elem : m)
+		<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; elem &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"prefix:"</span> &lt;&lt; m.prefix() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"suffix:"</span> &lt;&lt; m.suffix() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+</code></pre>
+<p>输出为：</p>
+<pre><code class="language-cpp hljs">&lt;xml&gt;value&lt;/xml&gt;
+xml
+value
+xml
+prefix:<span class="hljs-number">123</span>
+suffix:<span class="hljs-number">456</span>
+</code></pre>
+<p>这儿若换成regex_match匹配就会失败，因为regex_match是完全匹配的，而此处字符串前后却多加了几个字符。</p>
+<p>对于「搜索」，在匹配结果中可以分别通过prefix和suffix来获取前缀和后缀，前缀即是匹配内容前面的内容，后缀则是匹配内容后面的内容。</p>
+<p>那么若有多组符合条件的内容又如何得到其全部信息呢？这里依旧通过一个小例子来看：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"&lt;(.*)&gt;(.*)&lt;/(\\1)&gt;"</span>)</span></span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">content</span><span class="hljs-params">(<span class="hljs-string">"123&lt;xml&gt;value&lt;/xml&gt;456&lt;widget&gt;center&lt;/widget&gt;hahaha&lt;vertical&gt;window&lt;/vertical&gt;the end"</span>)</span></span>;
+<span class="hljs-built_in">std</span>::smatch m;
+<span class="hljs-keyword">auto</span> pos = content.cbegin();
+<span class="hljs-keyword">auto</span> end = content.cend();
+<span class="hljs-keyword">for</span> (; <span class="hljs-built_in">std</span>::regex_search(pos, end, m, reg); pos = m.suffix().first)
+{
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"----------------"</span> &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m.str() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m.str(<span class="hljs-number">1</span>) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m.str(<span class="hljs-number">2</span>) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; m.str(<span class="hljs-number">3</span>) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre>
+<p>输出结果为：</p>
+<pre><code class="language-cpp hljs">----------------
+&lt;xml&gt;value&lt;/xml&gt;
+xml
+value
+xml
+----------------
+&lt;widget&gt;center&lt;/widget&gt;
+widget
+center
+widget
+----------------
+&lt;vertical&gt;window&lt;/vertical&gt;
+vertical
+window
+vertical
+</code></pre>
+<p>此处使用了regex_search函数的另一个重载形式（regex_match函数亦有同样的重载形式），实际上所有的子串对象都是从std::pair&lt;&gt;派生的，其first（即此处的prefix）即为第一个字符的位置，second（即此处的suffix）则为最末字符的下一个位置。</p>
+<p>一组查找完成后，便可从suffix处接着查找，这样就能获取到所有符合内容的信息了。</p>
+<h2 id="分词（tokenize）">分词（Tokenize）</h2>
+<p>还有一种操作叫做「切割」，例如有一组数据保存着许多邮箱账号，并以逗号分隔，那就可以指定以逗号为分割符来切割这些内容，从而得到每个账号。</p>
+<p>而在C++的正则中，把这种操作称为Tokenize，用模板类regex_token_iterator&lt;&gt;提供分词迭代器，依旧通过例子来看：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">mail</span><span class="hljs-params">(<span class="hljs-string">"123@qq.vip.com,456@gmail.com,789@163.com,abcd@my.com"</span>)</span></span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">","</span>)</span></span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function">sregex_token_iterator <span class="hljs-title">pos</span><span class="hljs-params">(mail.begin()</span>, mail.<span class="hljs-title">end</span><span class="hljs-params">()</span>, reg, -1)</span>;
+<span class="hljs-keyword">decltype</span>(pos) end;
+<span class="hljs-keyword">for</span> (; pos != end; ++pos)
+{
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; pos-&gt;str() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre>
+<p>这样，就能通过逗号分割得到所有的邮箱：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-number">123</span>@qq.vip.com
+<span class="hljs-number">456</span>@gmail.com
+<span class="hljs-number">789</span>@<span class="hljs-number">163.</span>com
+abcd@my.com
+</code></pre>
+<p>sregex_token_iterator是针对string类型的特化，需要注意的是最后一个参数，这个参数可以指定一系列整数值，用来表示你感兴趣的内容，此处的-1表示对于匹配的正则表达式之前的子序列感兴趣；而若指定0，则表示对于匹配的正则表达式感兴趣，这里就会得到“,"；还可对正则表达式进行分组，之后便能输入任意数字对应指定的分组，大家可以动手试试。</p>
+<h2 id="替换（replace）">替换（Replace）</h2>
+<p>最后一种操作称为「替换」，即将正则表达式内容替换为指定内容，regex库用模板函数std::regex_replace提供「替换」操作。</p>
+<p>现在，给定一个数据为"he...ll..o, worl..d!"， 思考一下，如何去掉其中误敲的“.”？</p>
+<p>有思路了吗？来看看正则的解法：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-keyword">char</span> data[] = <span class="hljs-string">"he...ll..o, worl..d!"</span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"\\."</span>)</span></span>;
+<span class="hljs-comment">// output: hello, world!</span>
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::regex_replace(data, reg, <span class="hljs-string">""</span>);
+</code></pre>
+<p>我们还可以使用分组功能：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-keyword">char</span> data[] = <span class="hljs-string">"001-Neo,002-Lucia"</span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"(\\d+)-(\\w+)"</span>)</span></span>;
+<span class="hljs-comment">// output: 001 name=Neo,002 name=Lucia</span>
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::regex_replace(data, reg, <span class="hljs-string">"$1 name=$2"</span>);
+</code></pre>
+<p>当使用分组功能后，可以通过$N来得到分组内容，这个功能挺有用的。</p>
+<h2 id="实例（examples）">实例（Examples）</h2>
+<h3 id="1-验证邮箱">1. 验证邮箱</h3>
+<p>这个需求在注册登录时常有用到，用于检测用户输入的合法性。</p>
+<p>若是对匹配精确度要求不高，那么可以这么写：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> data = <span class="hljs-string">"123@qq.vip.com,456@gmail.com,789@163.com,abcd@my.com"</span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"\\w+@\\w+(\\.\\w+)+"</span>)</span></span>;
+
+<span class="hljs-built_in">std</span>::<span class="hljs-function">sregex_iterator <span class="hljs-title">pos</span><span class="hljs-params">(data.cbegin()</span>, data.<span class="hljs-title">cend</span><span class="hljs-params">()</span>, reg)</span>;
+<span class="hljs-keyword">decltype</span>(pos) end;
+<span class="hljs-keyword">for</span> (; pos != end; ++pos)
+{
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; pos-&gt;str() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre>
+<p>这里使用了另外一种遍历正则查找的方法，这种方法使用regex iterator来迭代，效率要比使用match高。这里的正则是一个弱匹配，但对于一般用户的输入来说没有什么问题，关键是简单，输出为：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-number">123</span>@qq.vip.com
+<span class="hljs-number">456</span>@gmail.com
+<span class="hljs-number">789</span>@<span class="hljs-number">163.</span>com
+abcd@my.com
+</code></pre>
+<p>但若我输入一个“Abc0_@aAa1.123.456.789”，它依旧能匹配成功，这明显是个非法邮箱，更精确的正则应该这样写：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> data = <span class="hljs-string">"123@qq.vip.com, \
+	       456@gmail.com, \
+           789@163.com.cn.mail, \
+           abcd@my.com, \
+           Abc0_@aAa1.123.456.789 \
+           haha@163.com.cn.com.cn"</span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"[a-zA-z0-9_]+@[a-zA-z0-9]+(\\.[a-zA-z]+){1,3}"</span>)</span></span>;
+
+<span class="hljs-built_in">std</span>::<span class="hljs-function">sregex_iterator <span class="hljs-title">pos</span><span class="hljs-params">(data.cbegin()</span>, data.<span class="hljs-title">cend</span><span class="hljs-params">()</span>, reg)</span>;
+<span class="hljs-keyword">decltype</span>(pos) end;
+<span class="hljs-keyword">for</span> (; pos != end; ++pos)
+{
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; pos-&gt;str() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre>
+<p>输出为：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-number">123</span>@qq.vip.com
+<span class="hljs-number">456</span>@gmail.com
+<span class="hljs-number">789</span>@<span class="hljs-number">163.</span>com.cn.mail
+abcd@my.com
+haha@<span class="hljs-number">163.</span>com.cn.com
+</code></pre>
+<h2 id="2-匹配ip">2. 匹配IP</h2>
+<p>有这样一串IP地址，192.68.1.254 102.49.23.013 10.10.10.10 2.2.2.2 8.109.90.30，<br>
+要求：取出其中的IP地址，并按地址段顺序输出IP地址。</p>
+<p>有点晚了，便不详细解释了，这里直接给出答案，可供大家参考：</p>
+<pre><code class="language-cpp hljs"><span class="hljs-built_in">std</span>::<span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">ip</span><span class="hljs-params">(<span class="hljs-string">"192.68.1.254 102.49.23.013 10.10.10.10 2.2.2.2 8.109.90.30"</span>)</span></span>;
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"原内容为：\n"</span> &lt;&lt; ip &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+
+<span class="hljs-comment">// 1. 位数对齐</span>
+ip = <span class="hljs-built_in">std</span>::regex_replace(ip, <span class="hljs-built_in">std</span>::regex(<span class="hljs-string">"(\\d+)"</span>), <span class="hljs-string">"00$1"</span>);
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"位数对齐后为：\n"</span> &lt;&lt; ip &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+
+<span class="hljs-comment">// 2. 有0的去掉</span>
+ip = <span class="hljs-built_in">std</span>::regex_replace(ip, <span class="hljs-built_in">std</span>::regex(<span class="hljs-string">"0*(\\d{3})"</span>), <span class="hljs-string">"$1"</span>);
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"去掉0后为：\n"</span> &lt;&lt; ip &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+
+<span class="hljs-comment">// 3. 取出IP</span>
+<span class="hljs-built_in">std</span>::<span class="hljs-function">regex <span class="hljs-title">reg</span><span class="hljs-params">(<span class="hljs-string">"\\s"</span>)</span></span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-function">sregex_token_iterator <span class="hljs-title">pos</span><span class="hljs-params">(ip.begin()</span>, ip.<span class="hljs-title">end</span><span class="hljs-params">()</span>, reg, -1)</span>;
+<span class="hljs-keyword">decltype</span>(pos) end;
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">set</span>&lt;<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&gt; ip_set;
+<span class="hljs-keyword">for</span> (; pos != end; ++pos)
+{
+	ip_set.insert(pos-&gt;str());
+}
+
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"------\n最终结果：\n"</span>;
+
+<span class="hljs-comment">// 4. 输出排序后的数组</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> elem : ip_set)
+{
+	<span class="hljs-comment">// 5. 去掉多余的0</span>
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::regex_replace(elem, 
+		<span class="hljs-built_in">std</span>::regex(<span class="hljs-string">"0*(\\d+)"</span>), <span class="hljs-string">"$1"</span>) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre>
+<p>输出结果为：</p>
+<pre><code class="language-cpp hljs">原内容为：
+<span class="hljs-number">192.68</span><span class="hljs-number">.1</span><span class="hljs-number">.254</span> <span class="hljs-number">102.49</span><span class="hljs-number">.23</span><span class="hljs-number">.013</span> <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.10</span> <span class="hljs-number">2.2</span><span class="hljs-number">.2</span><span class="hljs-number">.2</span> <span class="hljs-number">8.109</span><span class="hljs-number">.90</span><span class="hljs-number">.30</span>
+位数对齐后为：
+<span class="hljs-number">00192.0068</span><span class="hljs-number">.001</span><span class="hljs-number">.00254</span> <span class="hljs-number">00102.0049</span><span class="hljs-number">.0023</span><span class="hljs-number">.00013</span> <span class="hljs-number">0010.0010</span><span class="hljs-number">.0010</span><span class="hljs-number">.0010</span> <span class="hljs-number">002.002</span><span class="hljs-number">.002</span><span class="hljs-number">.002</span> <span class="hljs-number">008.00109</span><span class="hljs-number">.0090</span><span class="hljs-number">.0030</span>
+去掉<span class="hljs-number">0</span>后为：
+<span class="hljs-number">192.068</span><span class="hljs-number">.001</span><span class="hljs-number">.254</span> <span class="hljs-number">102.049</span><span class="hljs-number">.023</span><span class="hljs-number">.013</span> <span class="hljs-number">010.010</span><span class="hljs-number">.010</span><span class="hljs-number">.010</span> <span class="hljs-number">002.002</span><span class="hljs-number">.002</span><span class="hljs-number">.002</span> <span class="hljs-number">008.109</span><span class="hljs-number">.090</span><span class="hljs-number">.030</span>
+------
+最终结果：
+<span class="hljs-number">2.2</span><span class="hljs-number">.2</span><span class="hljs-number">.2</span>
+<span class="hljs-number">8.109</span><span class="hljs-number">.90</span><span class="hljs-number">.30</span>
+<span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.10</span>
+<span class="hljs-number">102.49</span><span class="hljs-number">.23</span><span class="hljs-number">.13</span>
+<span class="hljs-number">192.68</span><span class="hljs-number">.1</span><span class="hljs-number">.254</span>
+</code></pre>
+
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block"><div id="BlogPostCategory">
+    分类: 
+            <a href="https://www.cnblogs.com/coolcpp/category/1257547.html" target="_blank">C++</a></div>
+<div id="EntryTag">
+    标签: 
+            <a href="https://www.cnblogs.com/coolcpp/tag/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>,             <a href="https://www.cnblogs.com/coolcpp/tag/C%2B%2B/">C++</a></div>
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(10616205,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow(&#39;a35e1427-ac57-4148-e90d-08d5ec74334c&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./C++正则表达式 - cpluspluser - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./C++正则表达式 - cpluspluser - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/coolcpp/" target="_blank"><img src="./C++正则表达式 - cpluspluser - 博客园_files/20180719131019.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/coolcpp/">cpluspluser</a><br>
+            <a href="https://home.cnblogs.com/u/coolcpp/followees/">关注 - 0</a><br>
+            <a href="https://home.cnblogs.com/u/coolcpp/followers/">粉丝 - 2</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;a35e1427-ac57-4148-e90d-08d5ec74334c&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(10616205,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">2</span>
+    </div>
+    <div class="buryit" onclick="votePost(10616205,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/coolcpp/archive/2004/01/13/cpp-class-contains.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/coolcpp/archive/2004/01/13/cpp-class-contains.html" title="发布于 2004-01-13 00:00">C++类循环引用的问题</a>
+    <br>
+    <a href="https://www.cnblogs.com/coolcpp/archive/2004/01/13/rvalue-reference-and-moving-semantics.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/coolcpp/archive/2004/01/13/rvalue-reference-and-moving-semantics.html" title="发布于 2004-01-13 00:00">右值引用与移动语义</a>
+
+</div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2019-03-28 17:01</span>&nbsp;
+<a href="https://www.cnblogs.com/coolcpp/">cpluspluser</a>&nbsp;
+阅读(<span id="post_view_count">16547</span>)&nbsp;
+评论(<span id="post_comment_count">2</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=10616205" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(10616205);return false;">收藏</a></div>
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script src="./C++正则表达式 - cpluspluser - 博客园_files/highlight.min.js.下载"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 445520, cb_blogApp = 'coolcpp', cb_blogUserGuid = 'a35e1427-ac57-4148-e90d-08d5ec74334c';
+    var cb_entryId = 10616205, cb_entryCreatedDate = '2019-03-28 17:01', cb_postType = 1;
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder">
+
+<div id="comment_pager_top">
+    
+</div>
+
+<br>
+<div class="feedback_area_title">评论列表</div>
+<div class="feedbackNoItems">
+    <div class="feedbackNoItems"></div>
+</div>
+    <div class="feedbackItem">
+        <div class="feedbackListSubtitle">
+            <div class="feedbackManage">
+                &nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+            </div>
+            
+<a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html#4670726" class="layer">#1楼</a>
+<a name="4670726" id="comment_anchor_4670726"></a>
+ 
+<span class="comment_date">2020-08-29 18:39</span>
+
+ 
+        <a id="a_comment_author_4670726" href="https://www.cnblogs.com/iwetuan/" target="_blank">iwetuan</a>
+
+        </div>
+        <div class="feedbackCon">
+            
+<div id="comment_body_4670726" data-format-type="Markdown" class="blog_comment_body cnblogs-markdown">
+    <p>很详细，很不错的文档！</p>
+
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4670726, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4670726, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+        </div>
+    </div>
+    <div class="feedbackItem">
+        <div class="feedbackListSubtitle">
+            <div class="feedbackManage">
+                &nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+            </div>
+            
+<a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html#4670727" class="layer">#2楼</a>
+<a name="4670727" id="comment_anchor_4670727"></a>
+    <span id="comment-maxId" style="display: none">4670727</span>
+    <span id="comment-maxDate" style="display: none">2020/8/29 下午6:39:39</span>
+ 
+<span class="comment_date">2020-08-29 18:39</span>
+
+ 
+        <a id="a_comment_author_4670727" href="https://www.cnblogs.com/iwetuan/" target="_blank">iwetuan</a>
+
+        </div>
+        <div class="feedbackCon">
+            
+<div id="comment_body_4670727" data-format-type="Markdown" class="blog_comment_body cnblogs-markdown">
+    <p>评论太少了</p>
+
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4670727, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4670727, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+        </div>
+    </div>
+
+<div id="comment_pager_bottom">
+    
+</div>
+
+
+</div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html#top">返回顶部</a></div>
+    <div id="comment_form_container" style="visibility: visible;"><div class="login_tips">
+    注册用户登录后才能发表评论，请 
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a>
+     或 
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，
+    <a href="https://www.cnblogs.com/">访问</a> 网站首页。
+</div></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id="div-gpt-ad-1592365906576-0" style="width: 300px; height: 250px;"></div>
+    </div>
+    <div id="under_post_news"><div class="recomm-block"><b>相关博文：</b><br>·  <a title="深入理解正则表达式" href="https://www.cnblogs.com/China3S/p/3451971.html" target="_blank" onclick="clickRecomItmem(3451971)">深入理解正则表达式</a><br>·  <a title="过目不忘JS正则表达式" href="https://www.cnblogs.com/moqing/p/5665126.html" target="_blank" onclick="clickRecomItmem(5665126)">过目不忘JS正则表达式</a><br>·  <a title="读懂正则表达式就这么简单" href="https://www.cnblogs.com/zery/p/3438845.html" target="_blank" onclick="clickRecomItmem(3438845)">读懂正则表达式就这么简单</a><br>·  <a title="深入理解正则表达式" href="https://www.cnblogs.com/lizhenlin/p/6654934.html" target="_blank" onclick="clickRecomItmem(6654934)">深入理解正则表达式</a><br>·  <a title="Python系列之正则表达式详解" href="https://www.cnblogs.com/yyyg/p/5498803.html" target="_blank" onclick="clickRecomItmem(5498803)">Python系列之正则表达式详解</a><br>»  <a target="_blank" href="https://recomm.cnblogs.com/blogpost/10616205">更多推荐...</a><div id="cnblogs_t5"><a href="https://www.sheca.com/assets/wwx/page3.html?site=bokeyuan" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T5-上海CA-大家签&#39;)">【推荐】电子签名认准大家签，上海CA权威认证</a></div></div></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id="div-gpt-ad-1592366332455-0" style="width: 468px; height: 60px;"></div>
+    </div>
+    <div id="under_post_kb">
+<div class="itnews c_ad_block">
+    <b>最新 IT 新闻</b>:
+    <br>
+ ·          <a href="https://news.cnblogs.com/n/672738/" target="_blank">阿里VS腾讯，市值之争还是生态之争？</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/672737/" target="_blank">嫦娥四号进入第22月昼 “玉兔二号”将对2个撞击坑开展科学探测</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/672736/" target="_blank">李开复为今早言论致歉：系口误 给旷视美图蚂蚁金服三家公司带来困扰</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/672735/" target="_blank">对鸿蒙来说 这是“最坏”的时代 也是“最好”的时代</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/672734/" target="_blank">中国手机品牌挤不进韩国市场 三星霸占67%份额</a>
+        <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+        deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);        deliverT2();
+        deliverC1C2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<div id="sidebar_news" class="newsItem"><!--done-->
+<h3 class="catListTitle">公告</h3>
+
+<div id="blog-news">
+    微信公众号：CPP编程客（cpluspluser）
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/coolcpp/">
+            cpluspluser
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/coolcpp/" title="入园时间：2018-07-19">
+            2年1个月
+        </a>
+        <br>
+        粉丝：
+        <a href="https://home.cnblogs.com/u/coolcpp/followers/">
+            2
+        </a>
+        <br>
+        关注：
+        <a href="https://home.cnblogs.com/u/coolcpp/followees/">
+            0
+        </a>
+        <div id="p_b_follow">
+<a href="javascript:void(0)" onclick="follow(&#39;a35e1427-ac57-4148-e90d-08d5ec74334c&#39;)">+加关注</a></div>
+        <script>getFollowStatus('a35e1427-ac57-4148-e90d-08d5ec74334c');</script>
+    </div>
+</div>
+
+</div>
+
+<div id="sidebar_ad"></div>
+			<div id="blog-calendar" style="display:none"></div><script>loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn">
+<!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div id="sidebar_search" class="mySearch">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            <div id="widget_my_google" class="div_my_zzk">
+                <input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+
+
+<!-- 最新随笔 -->
+
+
+
+<!-- 我的标签 -->
+
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+    
+        <div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+            <h3 class="catListTitle">
+                
+随笔分类
+<span style="font-size:11px;font-weight:normal">(24)</span>
+
+
+            </h3>
+
+
+            <ul>
+
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/category/1257547.html" rel="" target="">
+    C++(7)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/category/1257548.html" rel="" target="">
+    Java(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/category/1257565.html" rel="" target="">
+    OpenGL(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/category/1257554.html" rel="" target="">
+    QT(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/category/1259749.html" rel="" target="">
+    VS Error(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/category/1257557.html" rel="" target="">
+    Windows(6)
+</a>
+ 
+
+                        </li>
+
+            </ul>
+
+
+        </div>
+        <div id="sidebar_postarchive" class="catListPostArchive sidebar-block">
+            <h3 class="catListTitle">
+                
+随笔档案
+<span style="font-size:11px;font-weight:normal">(33)</span>
+
+
+            </h3>
+
+
+            <ul>
+
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/archive/2020/05.html" rel="" target="">
+    2020年5月(1)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/archive/2019/07.html" rel="" target="">
+    2019年7月(1)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/archive/2019/03.html" rel="" target="">
+    2019年3月(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/archive/2018/08.html" rel="" target="">
+    2018年8月(1)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/coolcpp/archive/2018/07.html" rel="" target="">
+    2018年7月(28)
+</a>
+ 
+
+                        </li>
+
+            </ul>
+
+
+        </div>
+
+</div>
+
+<!-- 最新评论 -->
+<div id="sidebar_recentcomments" class="sidebar-block">
+    <div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div class="RecentCommentBlock">
+        <ul>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html">1. Re:C++正则表达式</a></li>
+                    <li class="recent_comment_body"><p>评论太少了</p>
+</li>
+                    <li class="recent_comment_author">--iwetuan</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html">2. Re:C++正则表达式</a></li>
+                    <li class="recent_comment_body"><p>很详细，很不错的文档！</p>
+</li>
+                    <li class="recent_comment_author">--iwetuan</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/coolcpp/p/rvalue-reference-and-moving-semantics.html">3. Re:右值引用与移动语义</a></li>
+                    <li class="recent_comment_body">第一个例子 // 纯右值 g(Point());这里我觉得应该是将亡值。所以调用了void g(Point&amp;&amp;)函数。纯右值是字面值。...</li>
+                    <li class="recent_comment_author">--timber234</li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+
+
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block">
+    <div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/coolcpp/p/qt-thread.html">
+                            1. QT多线程的使用(31806)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html">
+                            2. C++正则表达式(16540)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/coolcpp/p/qt-sql.html">
+                            3. QT之SQL的使用(4375)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/coolcpp/p/thread-synchronous.html">
+                            4. Windows线程同步的四种方式(2629)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/coolcpp/p/bigint-add.html">
+                            5. 大整数加法计算(2249)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block">
+    <div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html">
+                            1. C++正则表达式(2)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/coolcpp/p/rvalue-reference-and-moving-semantics.html">
+                            2. 右值引用与移动语义(1)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+    
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/coolcpp/p/cpp-regex.html">
+                                1. C++正则表达式(2)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/coolcpp/p/regoperator.html">
+                                2. Windows注册表基本操作(1)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div></div>
+                    <script>loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright © 2020 cpluspluser
+<br><span id="poweredby">Powered by .NET Core on Kubernetes</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+    
+
+
+</body></html>
